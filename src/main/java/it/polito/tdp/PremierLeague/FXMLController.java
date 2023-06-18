@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -44,16 +45,45 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	String s = this.txtGoals.getText();
+    	try {
+    		double d = Double.parseDouble(s);
+    		if(d>0) {
+    			model.creaGrafo(d);
+    			this.txtResult.appendText("Creato grafo con "+model.getGrafo().vertexSet().size()+" vertici e "+model.getGrafo().edgeSet().size()+" archi.\n");
+    		}
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    		this.txtResult.appendText("Numero dei goal inserito nel formato sbagliato.\n");
+		}
 
     }
 
     @FXML
     void doDreamTeam(ActionEvent event) {
-
+    	String s = this.txtK.getText();
+    	try {
+    		int i = Integer.parseInt(s);
+    		if(i>0) {
+    			this.txtResult.appendText("Dream team:\n");
+    			for(Player p : model.ricorsione(i)) {
+    				this.txtResult.appendText(p+"\n");
+    			}
+    		}
+    	}catch (NumberFormatException e) {
+    		e.printStackTrace();
+    		this.txtResult.appendText("Numero dei goal inserito nel formato sbagliato.\n");
+		}
     }
 
     @FXML
     void doTopPlayer(ActionEvent event) {
+    	if(model.getGrafo().edgeSet().size()>0) {
+    		this.txtResult.appendText("Il Best player è "+model.BestPlayer()+"\nI giocatori battuti sono:\n");
+    		for(Player p : model.getSet(model.BestPlayer())) {
+    			this.txtResult.appendText(p.getName()+"\n");
+    		}
+    	}
 
     }
 
